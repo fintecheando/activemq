@@ -1,4 +1,4 @@
-FROM webcenter/openjdk-jre:8
+FROM ubuntu:16.04 
 MAINTAINER Sebastien LANGOUREAUX <linuxworkgroup@hotmail.com>
 
 ENV ACTIVEMQ_CONFIG_DIR /opt/activemq/conf.tmp
@@ -6,10 +6,14 @@ ENV ACTIVEMQ_DATA_DIR /data/activemq
 
 # Update distro and install some packages
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y python-testtools python-nose python-pip vim curl supervisor logrotate locales  && \
+    apt-get upgrade -y && \
+    apt-get install openjdk-8-jre-headless -y && \
+    apt-get install locales -y && \
+    apt-get install --no-install-recommends -y python-setuptools python-testtools python-nose python-pip vim curl supervisor logrotate locales  && \
     update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
     locale-gen en_US.UTF-8 && \
     dpkg-reconfigure locales && \
+    apt-get clean all && \ 
     rm -rf /var/lib/apt/lists/*
 
 # Install stompy
@@ -35,9 +39,9 @@ EXPOSE 1883
 EXPOSE 61614
 
 # Expose some folders
-VOLUME ["/data/activemq"]
-VOLUME ["/var/log/activemq"]
-VOLUME ["/opt/activemq/conf"]
+#VOLUME ["/data/activemq"]
+#VOLUME ["/var/log/activemq"]
+#VOLUME ["/opt/activemq/conf"]
 
 WORKDIR /opt/activemq
 
